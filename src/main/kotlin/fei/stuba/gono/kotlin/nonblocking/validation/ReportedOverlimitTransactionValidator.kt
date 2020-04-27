@@ -31,8 +31,8 @@ class ReportedOverlimitTransactionValidator @Autowired constructor(
             ValidationUtils.invokeValidator(bankingDayValidator, transaction.transferDate!!, p1)
             ValidationUtils.invokeValidator(transferDateValidator, transaction.transferDate!!, p1)
         }
-        ValidationUtils.rejectIfEmpty(p1, "createdBy", "CREATEDBY_NOT_VALID")
-        ValidationUtils.rejectIfEmpty(p1, "organisationUnitID", "ORGANISATIONUNITID_NOT_VALID")
+        ValidationUtils.rejectIfEmpty(p1, "createdBy", "CREATEDBY_INVALID")
+        ValidationUtils.rejectIfEmpty(p1, "organisationUnitID", "ORGANISATIONUNITID_InVALID")
         if (transaction.amount != null)
             ValidationUtils.invokeValidator(moneyValidator, transaction.amount!!, p1)
 

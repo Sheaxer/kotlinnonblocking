@@ -132,7 +132,8 @@ class ReportedOverlimitTransactionServiceImpl @Autowired constructor(
                 acc = accountService.getAccountByIban(transaction.sourceAccount!!.iban!!)
             else if (transaction.sourceAccount!!.localAccountNumber!= null)
                acc = accountService.getAccountByLocalAccountNumber(transaction.sourceAccount!!.localAccountNumber!!)
-
+            else
+                acc = Account()
             if(acc == null || !acc.isActive)
                 customErrors.add("ACCOUNT_OFFLINE")
 
