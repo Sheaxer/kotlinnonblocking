@@ -20,7 +20,7 @@ data class Account(
         var localAccountNumber: String? = null,
 
         @JsonIgnore
-        var isActive : Boolean? = null,
+        var isActive : Boolean = true,
 
         @Id
         @JsonIgnore
