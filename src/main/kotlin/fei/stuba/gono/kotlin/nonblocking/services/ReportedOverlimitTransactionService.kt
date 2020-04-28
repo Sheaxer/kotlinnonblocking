@@ -1,6 +1,9 @@
 package fei.stuba.gono.kotlin.nonblocking.services
 
 import fei.stuba.gono.kotlin.nonblocking.pojo.ReportedOverlimitTransaction
+import fei.stuba.gono.kotlin.nonblocking.errors.ReportedOverlimitTransactionValidationException
+import fei.stuba.gono.kotlin.errors.ReportedOverlimitTransactionBadRequestException
+import fei.stuba.gono.kotlin.errors.ReportedOverlimitTransactionNotFoundException
 
 /***
  * Interface for marshalling and de-marshalling ReportedOverlimitTransaction  entities.
@@ -14,6 +17,7 @@ interface ReportedOverlimitTransactionService {
      * the entity is not valid.
      * @see ReportedOverlimitTransactionValidationException
      */
+    @Throws(ReportedOverlimitTransactionValidationException::class)
     suspend fun postTransaction(transaction: ReportedOverlimitTransaction): ReportedOverlimitTransaction
 
     /***
@@ -32,8 +36,8 @@ interface ReportedOverlimitTransactionService {
      * the entity is not valid.
      * @see ReportedOverlimitTransactionValidationException
      */
+    @Throws(ReportedOverlimitTransactionValidationException::class)
     suspend fun putTransaction(id: String, transaction: ReportedOverlimitTransaction): ReportedOverlimitTransaction
-
     /***
      * Deletes the entity identified by the given id.
      * @param id id of entity to be deleted.
@@ -43,6 +47,8 @@ interface ReportedOverlimitTransactionService {
      * @see  ReportedOverlimitTransactionNotFoundException
      * @see ReportedOverlimitTransactionBadRequestException
      */
+    @Throws(ReportedOverlimitTransactionNotFoundException::class,
+            ReportedOverlimitTransactionBadRequestException::class)
     suspend fun deleteTransaction(id: String)
 
 

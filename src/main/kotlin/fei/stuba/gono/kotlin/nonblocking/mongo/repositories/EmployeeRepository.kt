@@ -19,4 +19,6 @@ interface EmployeeRepository : ReactiveCrudRepository<Employee,String> {
      * @return Optional containing the entity or Optional.empty() if no entity is found.
      */
     fun findEmployeeByUsername(username: String) : Mono<Employee?>
+
+    fun existsByUsername(username: String): Mono<Boolean>
 }

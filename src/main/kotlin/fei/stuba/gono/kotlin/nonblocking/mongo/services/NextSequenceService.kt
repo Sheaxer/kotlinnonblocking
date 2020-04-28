@@ -27,7 +27,8 @@ class NextSequenceService @Autowired constructor(private val mongoOperations: Re
 private val op: MongoOperations)
 {
     /***
-     * Increments the value of sequence with the given sequence name and return it.
+     * Increments the value of sequence with the given sequence name and return it. Uses kotlin
+     * coroutines. Finds the sequence with given name, increments the value of maximal id and returns it as String.
      * @see SequenceId
      * @param seqName - name of the sequence.
      * @return - updated value of the sequence.
@@ -43,7 +44,7 @@ private val op: MongoOperations)
     }
 
     /***
-     * Sets value of sequence in MongoDB.
+     * Sets value of maximal id in a sequence with given name in MongoDB.
      * @see SequenceId
      * @param seqName name of the sequence,
      * @param value value that the sequence will be set to.
@@ -61,6 +62,7 @@ private val op: MongoOperations)
 
     /***
      * Checks if the sequence with given name needs to update its maximal id value by the given value.
+     * Uses kotlin coroutines.
      * @param seqName - name of the sequence, must not be null.
      * @param val - value to be checked against maximal id value, must not be null.
      */
@@ -80,7 +82,15 @@ private val op: MongoOperations)
             return
         }
     }
-
+    /***
+     * Retrieves new value of an id for saving new object in a repository. Updates maximal value
+     * of sequence with the given name, checks if an entity with this id already exists in the repository.
+     * If it does exist, function finds the actual maximal value of id used to store entities in the repository and
+     * updates the sequence.
+     * @param rep repository where the object will be saved.
+     * @param sequenceName name of the sequence holding the id of last saved object.
+     * @return value of id that should be used to save object in the given repository.
+     */
     suspend fun getNewId(rep: ReactiveCrudRepository<*,String>, seqName: String) : String
     {
        var newId = this.getNextSequence(seqName)
@@ -107,7 +117,12 @@ private val op: MongoOperations)
 
 
     }*/
-
+    /***
+     * Calculates the maximal id that was used to save an object in the given repository.
+     * Transforms ids of all entities of the given class into long and finds the max.
+     * @param rep repository, must not be null.
+     * @return String value of the maximal id in the given repository.
+     */
     private fun lastId(rep:  Class<*>): String {
         return op.execute<String>(rep) { mongoCollection: MongoCollection<Document> ->
             val doc = mongoCollection.find().projection(Projections.include("_id"))

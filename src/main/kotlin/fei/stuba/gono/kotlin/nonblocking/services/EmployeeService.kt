@@ -26,4 +26,6 @@ interface EmployeeService {
      * @return Mono emitting true if the entity was found, false otherwise.
      */
     suspend fun employeeExistsById(id: String): Boolean
+
+    suspend fun validate(employee: Employee)
 }

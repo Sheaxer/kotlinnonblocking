@@ -33,6 +33,9 @@ class ReportedOverlimitTransactionServiceImpl @Autowired constructor(
         private val organisationUnitService: OrganisationUnitService):
         ReportedOverlimitTransactionService {
 
+    /***
+     * Name of the sequence containing maximal value of id that was used to save entity in the repository.
+     */
     @Value("\${reportedOverlimitTransaction.transaction.sequenceName:customSequences}")
     private val sequenceName: String = "customSequences"
 
@@ -44,6 +47,7 @@ class ReportedOverlimitTransactionServiceImpl @Autowired constructor(
      * @param transaction entity to be saved.
      * @return saved entity.
      */
+    @Throws(ReportedOverlimitTransactionValidationException::class)
     override suspend fun postTransaction(transaction: ReportedOverlimitTransaction): ReportedOverlimitTransaction {
         validation(transaction)
        transaction.modificationDate = OffsetDateTime.now()
@@ -69,6 +73,7 @@ class ReportedOverlimitTransactionServiceImpl @Autowired constructor(
      * @param transaction entity to be saved.
      * @return saved entity.
      */
+    @Throws(ReportedOverlimitTransactionValidationException::class)
     override suspend fun putTransaction(id: String, transaction: ReportedOverlimitTransaction): ReportedOverlimitTransaction {
         validation(transaction)
         transaction.modificationDate = OffsetDateTime.now()
@@ -86,6 +91,8 @@ class ReportedOverlimitTransactionServiceImpl @Autowired constructor(
      * @throws ReportedOverlimitTransactionBadRequestException in case the entity couldn't be deleted because its
      * state was CLOSED.
      */
+    @Throws(ReportedOverlimitTransactionBadRequestException::class,
+            ReportedOverlimitTransactionNotFoundException::class)
     override suspend fun deleteTransaction(id: String) {
         val trans = repository.findById(id).awaitFirstOrNull() ?:
         throw ReportedOverlimitTransactionNotFoundException("ID_NOT_FOUND")
@@ -97,47 +104,56 @@ class ReportedOverlimitTransactionServiceImpl @Autowired constructor(
             repository.deleteById(id).awaitFirst()
     }
 
+    /***
+     * Validates that ReportedOverlimitTransaction contains all mandatory properties and that
+     * they are valid.
+     * @throws ReportedOverlimitTransactionValidationException if validation fails with all error codes.
+     */
+    @Throws(ReportedOverlimitTransactionValidationException::class)
     private suspend fun validation(transaction: ReportedOverlimitTransaction)
     {
         val errors = BeanPropertyBindingResult(transaction,ReportedOverlimitTransaction::class.java.name)
         validator.validate(transaction,errors)
         val customErrors = mutableListOf<String>()
-
+        // maps all error codes to String and adds them to gathered error messages.
         errors.allErrors.stream().map{oe -> oe.codes?.get(oe.codes!!.lastIndex) }
                 .forEach{x ->
                     if (x != null) {
                         customErrors.add(x)
                     }
                 }
-
+        // checking if client exists in repository.
         if(transaction.clientId!= null)
         {
             if(!clientService.clientExistsById(transaction.clientId!!))
                 customErrors.add("CLIENTID_INVALID")
         }
+        // checking if organisationUnit exists in repository
         if(transaction.organisationUnitID != null)
         {
             if(!organisationUnitService.organisationUnitExistsById(transaction.organisationUnitID!!))
                 customErrors.add("ORGANISATIONUNIT_INVALID")
         }
+        // checking if employee exists in repository
         if(transaction.createdBy!= null)
         {
             if(! employeeService.employeeExistsById(transaction.createdBy!!))
                 customErrors.add("CREATEDBY_INVALID")
         }
+        // checking if account exists in the repository
         if(transaction.sourceAccount!= null)
         {
-            var acc: Account? = null
-            if(transaction.sourceAccount!!.iban != null)
-                acc = accountService.getAccountByIban(transaction.sourceAccount!!.iban!!)
-            else if (transaction.sourceAccount!!.localAccountNumber!= null)
-               acc = accountService.getAccountByLocalAccountNumber(transaction.sourceAccount!!.localAccountNumber!!)
-            else
-                acc = Account()
+            val acc: Account? = when {
+                transaction.sourceAccount!!.iban != null -> accountService.getAccountByIban(transaction.sourceAccount!!.iban!!)
+                transaction.sourceAccount!!.localAccountNumber!= null -> accountService.
+                getAccountByLocalAccountNumber(transaction.sourceAccount!!.localAccountNumber!!)
+                else -> Account()
+            }
             if(acc == null || !acc.isActive)
                 customErrors.add("ACCOUNT_OFFLINE")
 
         }
+        // validaion failed - throw exception with all error codes
         if(customErrors.isNotEmpty())
             throw ReportedOverlimitTransactionValidationException(customErrors)
     }

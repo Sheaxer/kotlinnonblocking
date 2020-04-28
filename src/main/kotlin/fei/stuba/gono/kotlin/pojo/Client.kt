@@ -11,9 +11,9 @@ import javax.validation.constraints.NotBlank
 @Document(value = "clients")
 @TypeAlias(value = "client")
 data class Client (
-    @NotBlank
+    @get:NotBlank
     var firstName: String? = null,
-    @NotBlank
+    @get:NotBlank
     var surName: String? = null,
 
     @Id

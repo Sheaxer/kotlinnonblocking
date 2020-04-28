@@ -1,6 +1,7 @@
 package fei.stuba.gono.kotlin.pojo
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonProperty
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.index.Indexed
 import org.springframework.data.mongodb.core.mapping.Document
@@ -15,10 +16,10 @@ data class Employee (
     var id: String? = null,
 
     @Indexed(unique = true)
-    @NotBlank
+    @get:NotBlank(message="USERNAME_INVALID")
     var username:String? = null,
 
-    @NotBlank
-    @JsonIgnore
+    @get:NotBlank(message = "PASSWORD_INVALID")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     var password:String? = null
 )

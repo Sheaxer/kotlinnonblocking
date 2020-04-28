@@ -11,6 +11,4 @@ import org.springframework.stereotype.Repository
  */
 @Repository
 interface ReportedOverlimitTransactionRepository : ReactiveCrudRepository<ReportedOverlimitTransaction,String>
-{
-
-}
+{}
