@@ -2,7 +2,7 @@ package fei.stuba.gono.kotlin.nonblocking.rest
 
 import fei.stuba.gono.kotlin.nonblocking.services.EmployeeService
 import fei.stuba.gono.kotlin.pojo.Employee
-import fei.stuba.gono.kotlin.security.JwtUtils
+import fei.stuba.gono.kotlin.nonblocking.security.JwtUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
@@ -19,7 +19,7 @@ class LoginController @Autowired constructor(
     suspend fun login(@RequestBody employee:Employee): ResponseEntity<Void>
     {
         employeeService.validate(employee)
-        val emp = employeeService.findEmloyeeByUsername(employee.username!!)
+        val emp = employeeService.findEmployeeByUsername(employee.username!!)
                 ?: return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
         if(bCryptPasswordEncoder.matches(employee.password,emp.password))
         {

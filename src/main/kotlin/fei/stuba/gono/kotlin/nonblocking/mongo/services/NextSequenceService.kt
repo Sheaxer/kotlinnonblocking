@@ -64,7 +64,7 @@ private val op: MongoOperations)
      * Checks if the sequence with given name needs to update its maximal id value by the given value.
      * Uses kotlin coroutines.
      * @param seqName - name of the sequence, must not be null.
-     * @param val - value to be checked against maximal id value, must not be null.
+     * @param value - value to be checked against maximal id value, must not be null.
      */
     suspend fun needsUpdate(seqName: String, value: String)
     {
@@ -88,7 +88,7 @@ private val op: MongoOperations)
      * If it does exist, function finds the actual maximal value of id used to store entities in the repository and
      * updates the sequence.
      * @param rep repository where the object will be saved.
-     * @param sequenceName name of the sequence holding the id of last saved object.
+     * @param seqName name of the sequence holding the id of last saved object.
      * @return value of id that should be used to save object in the given repository.
      */
     suspend fun getNewId(rep: ReactiveCrudRepository<*,String>, seqName: String) : String

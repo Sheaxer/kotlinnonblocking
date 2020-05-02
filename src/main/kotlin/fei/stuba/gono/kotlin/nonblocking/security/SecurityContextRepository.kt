@@ -1,5 +1,6 @@
-package fei.stuba.gono.kotlin.security
+package fei.stuba.gono.kotlin.nonblocking.security
 
+import fei.stuba.gono.kotlin.security.SecurityConstants
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpHeaders
 import org.springframework.security.authentication.ReactiveAuthenticationManager

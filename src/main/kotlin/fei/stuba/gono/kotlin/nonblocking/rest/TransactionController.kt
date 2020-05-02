@@ -41,4 +41,12 @@ class TransactionController @Autowired constructor(
     {
        return transactionService.deleteTransaction(id)
     }
+
+    @PostMapping("/{id}",consumes = ["application/json"])
+    @ResponseStatus(HttpStatus.OK)
+    suspend fun postTransaction(@PathVariable id: String, @RequestBody transaction: ReportedOverlimitTransaction):
+            ReportedOverlimitTransaction
+    {
+        return transactionService.putTransaction(id,transaction)
+    }
 }

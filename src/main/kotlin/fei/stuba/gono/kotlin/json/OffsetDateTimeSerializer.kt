@@ -11,7 +11,9 @@ import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 
 /***
- * Custom serialization of OffsetDateTime to JSON. JSON format is yy-MM-ddThh:mm:ssOffset.
+ * Custom serialization of OffsetDateTime to JSON. JSON format is yyyy-MM-ddThh:mm:Z.
+ *
+ * Vlastná serializácia objektu triedy OffsetDateTime do JSON reťazca vo formáte yyyy-MM-ddThh:mm:ss:Z .
  * @see OffsetDateTime
  * @see StdSerializer
  */

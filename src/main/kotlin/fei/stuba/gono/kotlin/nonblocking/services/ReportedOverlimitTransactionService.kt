@@ -51,5 +51,7 @@ interface ReportedOverlimitTransactionService {
             ReportedOverlimitTransactionBadRequestException::class)
     suspend fun deleteTransaction(id: String)
 
+    @Throws(ReportedOverlimitTransactionValidationException::class)
+    suspend fun validation(transaction: ReportedOverlimitTransaction)
 
 }

@@ -110,7 +110,7 @@ class ReportedOverlimitTransactionServiceImpl @Autowired constructor(
      * @throws ReportedOverlimitTransactionValidationException if validation fails with all error codes.
      */
     @Throws(ReportedOverlimitTransactionValidationException::class)
-    private suspend fun validation(transaction: ReportedOverlimitTransaction)
+    override suspend fun validation(transaction: ReportedOverlimitTransaction)
     {
         val errors = BeanPropertyBindingResult(transaction,ReportedOverlimitTransaction::class.java.name)
         validator.validate(transaction,errors)

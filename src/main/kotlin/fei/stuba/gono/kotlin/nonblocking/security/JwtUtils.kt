@@ -1,7 +1,8 @@
-package fei.stuba.gono.kotlin.security
+package fei.stuba.gono.kotlin.nonblocking.security
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
+import fei.stuba.gono.kotlin.security.SecurityConstants
 import org.springframework.stereotype.Component
 import java.io.Serializable
 import java.util.*
@@ -20,12 +21,14 @@ class JwtUtils : Serializable {
         fun getUserFromToken(token: String): String?
         {
             return try {
-                JWT.require(Algorithm.HMAC512(SecurityConstants.SECRET_KEY.toByteArray()))
+                val decodedJWT = JWT.require(Algorithm.HMAC512(SecurityConstants.SECRET_KEY.toByteArray()))
                         .build()
                         .verify(token.replace(SecurityConstants.TOKEN_PREFIX,""))
-                        .subject
+                if(Date().before(decodedJWT.expiresAt))
+                    decodedJWT.subject
+                else null
             }catch (ex: com.auth0.jwt.exceptions.JWTDecodeException) {
-                null
+                null;
             }
         }
     }

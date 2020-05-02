@@ -32,7 +32,7 @@ class EmployeeServiceImpl @Autowired constructor(
     @Value("\${reportedOverlimitTransaction.employee.sequenceName:employeeSequence}")
     private val sequenceName : String = "employeeSequence"
 
-    override suspend fun findEmloyeeByUsername(userName: String): Employee? {
+    override suspend fun findEmployeeByUsername(userName: String): Employee? {
         return employeeRepository.findEmployeeByUsername(userName).awaitFirstOrNull()
     }
 
@@ -41,7 +41,7 @@ class EmployeeServiceImpl @Autowired constructor(
         if(employeeRepository.existsByUsername(employee.username!!).awaitFirst())
             throw ReportedOverlimitTransactionBadRequestException("USERNAME_EXISTS")
         employee.id = nextSequenceService.getNewId(employeeRepository,sequenceName)
-        employee!!.password = bCryptPasswordEncoder.encode(employee.password)
+        employee.password = bCryptPasswordEncoder.encode(employee.password)
         return employeeRepository.save(employee).awaitFirst()
 
     }

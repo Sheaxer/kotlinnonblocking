@@ -1,4 +1,4 @@
-package fei.stuba.gono.kotlin.security
+package fei.stuba.gono.kotlin.nonblocking.security
 
 import org.springframework.security.authentication.ReactiveAuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -15,7 +15,7 @@ class JWTAuthenticationManager:ReactiveAuthenticationManager {
         val user  = JwtUtils.getUserFromToken(token)
         if(user!= null)
         {
-            val auth: UsernamePasswordAuthenticationToken =
+            val auth =
                     UsernamePasswordAuthenticationToken(user,null, mutableListOf())
             return Mono.just(auth)
         }

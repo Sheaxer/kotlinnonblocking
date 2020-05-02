@@ -11,7 +11,7 @@ interface EmployeeService {
      * @param userName - User Name identifying the entity.
      * @return Mono emitting the entity or Mono.empty() if no entity was found.
      */
-    suspend fun findEmloyeeByUsername(userName : String): Employee?
+    suspend fun findEmployeeByUsername(userName : String): Employee?
 
     /***
      * Saves the entity.
