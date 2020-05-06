@@ -24,14 +24,12 @@ class OffsetDateTimeSerializer(t: Class<OffsetDateTime>?) : StdSerializer<Offset
     constructor() : this(null)
 
     override fun serialize(p0: OffsetDateTime?, p1: JsonGenerator?, p2: SerializerProvider?) {
-        log.print("I AM HERE")
         var tmp = DateTimeFormatter.ISO_DATE_TIME.format(p0)
         if(tmp.lastIndexOf('Z') != -1)
         {
             // replace Z with +00:00
             tmp = tmp.substring(0,tmp.lastIndexOf('Z')) + "+00:00"
         }
-        log.println(tmp)
         // remove fractions of seconds from time
         val index1 = tmp.lastIndexOf('.')
         if(index1!= -1)
