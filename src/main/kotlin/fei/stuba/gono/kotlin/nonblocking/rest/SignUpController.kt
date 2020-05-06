@@ -19,9 +19,8 @@ class SignUpController @Autowired constructor(private val employeeService: Emplo
 
     @PostMapping("/signup", consumes = ["application/json"])
     @ResponseStatus(HttpStatus.OK)
-    suspend fun postEmployee(@RequestBody employee: Employee): String
+    suspend fun postEmployee(@RequestBody employee: Employee): Employee?
     {
-        employeeService.saveEmployee(employee)
-        return "SUCCESFULLY_REGISTERED"
+       return employeeService.saveEmployee(employee)
     }
 }
