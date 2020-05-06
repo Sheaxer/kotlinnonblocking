@@ -24,7 +24,7 @@ class LoginController @Autowired constructor(
         if(bCryptPasswordEncoder.matches(employee.password,emp.password))
         {
             val responseHeaders = HttpHeaders()
-            responseHeaders.set(HttpHeaders.AUTHORIZATION,"Bearer +${JwtUtils.createJWT(employee.username!!)}")
+            responseHeaders.set(HttpHeaders.AUTHORIZATION,JwtUtils.createJWT(employee.username!!))
             return ResponseEntity.status(HttpStatus.OK).headers(responseHeaders).build()
 
         }

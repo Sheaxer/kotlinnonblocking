@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.validation.BeanPropertyBindingResult
+import reactor.core.publisher.Mono
 
 /***
  * Implementation of EmployeeService for use with MongoDB in nonblocking mode. Uses kotlin coroutines.
@@ -62,5 +63,9 @@ class EmployeeServiceImpl @Autowired constructor(
                     }.toMutableList()
             )
         }
+    }
+
+    override fun employeeExistsByUsername(userName: String): Mono<Boolean> {
+        return employeeRepository.existsByUsername(userName)
     }
 }

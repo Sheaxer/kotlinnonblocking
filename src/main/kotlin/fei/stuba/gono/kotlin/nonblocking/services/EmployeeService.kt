@@ -1,6 +1,8 @@
 package fei.stuba.gono.kotlin.nonblocking.services
 
+import com.sun.org.apache.xpath.internal.operations.Bool
 import fei.stuba.gono.kotlin.pojo.Employee
+import reactor.core.publisher.Mono
 
 /***
  * Interface for marshalling and de-marshalling Employee entities.
@@ -28,4 +30,6 @@ interface EmployeeService {
     suspend fun employeeExistsById(id: String): Boolean
 
     suspend fun validate(employee: Employee)
+
+    fun employeeExistsByUsername(userName: String): Mono<Boolean>
 }

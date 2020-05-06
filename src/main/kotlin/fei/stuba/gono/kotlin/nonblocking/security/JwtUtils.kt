@@ -12,7 +12,7 @@ class JwtUtils : Serializable {
     companion object{
         fun createJWT(username: String) : String
         {
-           return JWT.create()
+           return SecurityConstants.TOKEN_PREFIX + JWT.create()
                     .withSubject(username)
                     .withExpiresAt(Date(System.currentTimeMillis() + SecurityConstants.EXPIRE_LENGTH))
                     .sign(Algorithm.HMAC512(SecurityConstants.SECRET_KEY.toByteArray()))
@@ -28,7 +28,7 @@ class JwtUtils : Serializable {
                     decodedJWT.subject
                 else null
             }catch (ex: com.auth0.jwt.exceptions.JWTDecodeException) {
-                null;
+                null
             }
         }
     }
