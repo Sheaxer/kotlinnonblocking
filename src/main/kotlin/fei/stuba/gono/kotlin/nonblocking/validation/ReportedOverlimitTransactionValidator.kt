@@ -23,16 +23,24 @@ class ReportedOverlimitTransactionValidator @Autowired constructor(
         ValidationUtils.rejectIfEmpty(p1, "sourceAccount", "SOURCEACCOUNT_INVALID")
         if (transaction.sourceAccount != null)
             ValidationUtils.invokeValidator(accountValidator, transaction.sourceAccount!!, p1)
+        ValidationUtils.rejectIfEmptyOrWhitespace(p1, "identificationId", "IDENTIFICATIONID_INVALID")
         ValidationUtils.rejectIfEmpty(p1, "amount", "FIELD_INVALID")
         ValidationUtils.rejectIfEmpty(p1, "vault", "VAULT_INVALID")
-        ValidationUtils.rejectIfEmpty(p1, "transferDate", "INVALID_DATE")
+        if (transaction.vault != null) {
+            transaction.vault!!.stream().forEach { v ->
+                if (v.type == null) p1.reject("VAULTTYPE_INVALID")
+                if (v.number <= 0) p1.reject("VAULTNUMBER_INVALID")
+                if (v.nominalValue <= 0) p1.reject("VAULTNOMINALVALUE_INVALID")
+            }
+        }
+        ValidationUtils.rejectIfEmpty(p1, "transferDate", "TRANSFERDATE_INVALID")
         if (transaction.transferDate != null)
         {
             ValidationUtils.invokeValidator(bankingDayValidator, transaction.transferDate!!, p1)
             ValidationUtils.invokeValidator(transferDateValidator, transaction.transferDate!!, p1)
         }
         ValidationUtils.rejectIfEmpty(p1, "createdBy", "CREATEDBY_INVALID")
-        ValidationUtils.rejectIfEmpty(p1, "organisationUnitID", "ORGANISATIONUNITID_InVALID")
+        ValidationUtils.rejectIfEmpty(p1, "organisationUnitID", "ORGANISATIONUNITID_INVALID")
         if (transaction.amount != null)
             ValidationUtils.invokeValidator(moneyValidator, transaction.amount!!, p1)
 

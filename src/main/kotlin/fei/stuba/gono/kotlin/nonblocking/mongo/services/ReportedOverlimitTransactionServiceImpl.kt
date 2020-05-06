@@ -80,6 +80,8 @@ class ReportedOverlimitTransactionServiceImpl @Autowired constructor(
         if(!repository.existsById(id).awaitFirstOrElse { false })
             transaction.state = State.CREATED
         transaction.id = id
+        if(transaction.state == null)
+            transaction.state=State.CREATED
         nextSequenceService.needsUpdate(sequenceName,id)
         return repository.save(transaction).awaitFirst()
     }

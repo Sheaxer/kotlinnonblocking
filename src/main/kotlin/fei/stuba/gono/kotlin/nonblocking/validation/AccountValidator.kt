@@ -13,7 +13,7 @@ class AccountValidator: Validator {
         if(account.iban.isNullOrBlank())
         {
             if(account.localAccountNumber.isNullOrBlank())
-                p1.reject("INVALID_ACCOUNT")
+                p1.reject("SOURCEACCOUNT_INVALID")
         }
     }
 

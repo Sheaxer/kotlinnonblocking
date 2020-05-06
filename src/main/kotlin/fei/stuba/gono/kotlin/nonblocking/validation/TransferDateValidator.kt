@@ -19,7 +19,12 @@ class TransferDateValidator: Validator {
     private val cDays: Long = 0
 
     override fun validate(p0: Any, p1: Errors) {
-        val today = Date()
+        val cal = Calendar.getInstance()
+        cal.time = Date()
+        cal[Calendar.HOUR_OF_DAY] = 0
+        cal[Calendar.MINUTE] = 0
+        cal[Calendar.SECOND] = 0
+        val today = cal.time
         val date = p0 as Date
         if(date.before(today))
             p1.reject("INVALID_DATE_IN_PAST")

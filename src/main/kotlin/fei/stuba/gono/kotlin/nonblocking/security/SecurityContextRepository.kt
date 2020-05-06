@@ -23,8 +23,8 @@ class SecurityContextRepository @Autowired constructor(
 
     override fun load(p0: ServerWebExchange): Mono<SecurityContext> {
         val request = p0.request
-        val authHeader = request.headers.getFirst(HttpHeaders.AUTHORIZATION)
-        if(authHeader!=null && authHeader.startsWith(SecurityConstants.HEADER_STRING))
+        val authHeader: String? = request.headers.getFirst(HttpHeaders.AUTHORIZATION)
+        if(authHeader!=null && authHeader.startsWith(SecurityConstants.TOKEN_PREFIX))
         {
             val auth = UsernamePasswordAuthenticationToken(authHeader,authHeader)
             return this.authenticationManager.authenticate(auth).map { a-> SecurityContextImpl(a) }

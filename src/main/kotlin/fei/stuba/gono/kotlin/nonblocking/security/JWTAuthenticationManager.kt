@@ -25,7 +25,7 @@ class JWTAuthenticationManager @Autowired constructor(
                     val auth = UsernamePasswordAuthenticationToken(user, null, ArrayList())
                     // SecurityContextHolder.getContext().setAuthentication(auth);
                     return@flatMap Mono.just(auth)
-                } else return@flatMap Mono.empty()
+                } else return@flatMap Mono.empty<Authentication>()
             }
         }
         return Mono.empty()

@@ -8,6 +8,7 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 
@@ -16,6 +17,7 @@ class LoginController @Autowired constructor(
         private val bCryptPasswordEncoder: BCryptPasswordEncoder,
         private val employeeService: EmployeeService
 ) {
+    @PostMapping("/login",consumes = ["application/json"])
     suspend fun login(@RequestBody employee:Employee): ResponseEntity<Void>
     {
         employeeService.validate(employee)
