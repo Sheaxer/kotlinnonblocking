@@ -37,7 +37,7 @@ class EmployeeServiceImpl @Autowired constructor(
         return employeeRepository.findEmployeeByUsername(userName).awaitFirstOrNull()
     }
 
-    override suspend fun saveEmployee(employee: Employee): Employee? {
+    override suspend fun saveEmployee(employee: Employee): Employee {
         validate(employee)
         if(employeeRepository.existsByUsername(employee.username!!).awaitFirst())
             throw ReportedOverlimitTransactionBadRequestException("USERNAME_EXISTS")

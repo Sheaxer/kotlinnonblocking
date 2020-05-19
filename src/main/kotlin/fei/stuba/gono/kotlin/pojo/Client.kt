@@ -7,6 +7,7 @@ import javax.validation.constraints.NotBlank
 
 /***
  * Class representing data about a bank client.
+ * Trieda reprezentujúca dáta o bankovom klientovi.
  */
 @Document(value = "clients")
 @TypeAlias(value = "client")

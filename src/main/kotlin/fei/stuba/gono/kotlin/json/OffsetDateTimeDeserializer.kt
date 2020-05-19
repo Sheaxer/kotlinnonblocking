@@ -6,9 +6,10 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer
 import org.springframework.stereotype.Component
 import java.time.OffsetDateTime
 
-/***
- * <div class="en">Class that allows deserialization from JSON to an instance of OffsetDateTime.</div>
- * <div class="sk">Trieda ktorá zabezpečuje de-serializáciu z JSON reťazca na inštanciu triedy OffsetDateTime.</div>
+/**
+ * Class that allows deserialization from JSON to an instance of OffsetDateTime.
+ *
+ * Trieda ktorá zabezpečuje de-serializáciu z JSON reťazca na inštanciu triedy OffsetDateTime.
  * @see OffsetDateTime
  * @see StdDeserializer
  */

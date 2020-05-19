@@ -13,7 +13,12 @@ import org.springframework.data.mongodb.core.mapping.Document
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 import java.util.*
-
+/***
+ * Class representing ReportedOverlimitTransaction from FENiX - New FrontEnd solution API definition.
+ *
+ * Trieda reprezentujúca ReportedOverlimitTransaction z FENix - New FrontEnd solution API definition
+ *
+ */
 @Document(collection = "reportedOverlimitTransactions")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 class ReportedOverlimitTransaction {

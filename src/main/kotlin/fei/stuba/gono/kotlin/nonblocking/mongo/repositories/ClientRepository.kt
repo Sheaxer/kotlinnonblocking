@@ -6,10 +6,10 @@ import org.springframework.data.repository.reactive.ReactiveCrudRepository
 import org.springframework.stereotype.Repository
 
 /***
- * <div class="en">Interface extending ReactiveCrudRepository for Client entities. Automatically
- * instantiated by the Spring</div>
- * <div class="sk">Rozhranie rozširujúce ReactiveCrudRepository pre entity triedy Client. Automaticky inštanciované
- * pomocou Spring.</div>
+ * Interface extending ReactiveCrudRepository for Client entities. Automatically
+ * instantiated by the Spring
+ * Rozhranie rozširujúce ReactiveCrudRepository pre entity triedy Client. Automaticky inštanciované
+ * pomocou Spring.
  * @see Client
  * @see org.springframework.data.repository.reactive.ReactiveCrudRepository
  */

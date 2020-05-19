@@ -10,23 +10,23 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 import fei.stuba.gono.kotlin.nonblocking.validation.ReportedOverlimitTransactionValidator
 import java.util.*
 /***
- * <div class="en">Class that implements custom error handling.</div>
- * <div class="sk">Trieda ktorá implementuje vlastné spravocanie výnimiek.</div>
+ * Class that implements custom error handling.
+ * Trieda ktorá implementuje vlastné spravocanie výnimiek.
  */
 @RestControllerAdvice
 class ErrorHandler {
 
-    /***
-     * <div class="en">Handles validation errors that occur during put and post REST methods. Returns
-     * HTTTp code BAD_REQUEST - 400 and list of validation errors.</div>
-     * <div class="sk">Spracuváva validačné výnimky ktoré môžu nastať počas PUT a POST REST metód. Vracia
-     * HTTP kód BAD_REQUEST - 400 a zoznam validačných chýb v tele odpovede.</div>
+    /**
+     * Handles validation errors that occur during put and post REST methods. Returns
+     * HTTTp code BAD_REQUEST - 400 and list of validation errors. Suspending function.
+     * Spracuváva validačné výnimky ktoré môžu nastať počas PUT a POST REST metód. Vracia
+     * HTTP kód BAD_REQUEST - 400 a zoznam validačných chýb v tele odpovede. Zastaviteľná funkcia.
      * @see ReportedOverlimitTransactionValidationException
-     * @see stuba.fei.gono.java.nonblocking.validation.ReportedOverlimitTransactionValidator
-     * @param ex <div class="en">exception containing errors that were discovered during validation.</div>
-     *           <div class="sk">výnimka obsahujúca zoznam chybných hlášok zistených počas validácie.</div>
-     * @return <div class="en">Mono emitting a List of errors discovered during validation.</div>
-     * <div class="sk">Mono emitujúce zoznam chybových hlášok zistených počas validácie.</div>
+     * @see fei.stuba.gono.kotlin.nonblocking.validation.ReportedOverlimitTransactionValidator
+     * @param ex exception containing errors that were discovered during validation.
+     *           výnimka obsahujúca zoznam chybných hlášok zistených počas validácie.
+     * @return Mono emitting a List of errors discovered during validation.
+     * Mono emitujúce zoznam chybových hlášok zistených počas validácie.
      *
      */
     @ExceptionHandler(ReportedOverlimitTransactionValidationException::class)
@@ -37,15 +37,15 @@ class ErrorHandler {
         return ex.errors
     }
 
-    /***
-     * <div class="en">Handles ReportedOverlimitTransactionNotFoundException
-     * by returning the error code and sending HTTP code NOT_FOUND - 404.</div>
-     * <div class="sk">Spracúváva ReportedOverlimitTransactionNotFoundException výnimku
-     * vrátením HTTP kódu 404 Not Found a chybovej hlášky v tele správy.</div>
-     * @param ex <div class="en">caught exception.</div>
-     *           <div class="sk">odchytená výnimka.</div>
-     * @return <div class="en">Mono emitting the list containing the error message of ex.</div>
-     * <div class="sk">Mono emitujúce zoznam obsahujúcí chybovú hlášku v ex.</div>
+    /**
+     * Handles ReportedOverlimitTransactionNotFoundException
+     * by returning the error code and sending HTTP code NOT_FOUND - 404. Suspending function.
+     * Spracúváva ReportedOverlimitTransactionNotFoundException výnimku
+     * vrátením HTTP kódu 404 Not Found a chybovej hlášky v tele správy.  Zastaviteľná funkcia.
+     * @param ex caught exception.
+     *           odchytená výnimka.
+     * @return Mono emitting the list containing the error message of ex.
+     * Mono emitujúce zoznam obsahujúcí chybovú hlášku v ex.
      */
     @ExceptionHandler(ReportedOverlimitTransactionNotFoundException::class)
     @ResponseBody
@@ -54,15 +54,15 @@ class ErrorHandler {
         return ArrayList(setOf(ex.message))
     }
 
-    /***
-     * <div class="en">Handles ReportedOverlimitTransactionBadRequestException by returning
-     * the error code and sending HTTP code BAD_REQUEST - 400.</div>
-     * <div class="sk">Spracúvava ReportedOverlimitTransactionBadRequestException výnimku vrátením
-     * HTTP kódu BAD_REQUEST - 400 a chybovej hlášky v tele správy.</div>
-     * @param ex <div class="en">caught exception.</div>
-     *           <div class="sk">odchytená výnimka.</div>
-     * @return <div class="en">Mono emitting the list containing the error message of ex.</div>
-     * <div class="sk">Mono emitujúce zoznam ktorý obsahuje chybovú hlášku v ex.</div>
+    /**
+     * Handles ReportedOverlimitTransactionBadRequestException by returning
+     * the error code and sending HTTP code BAD_REQUEST - 400. Suspending function.
+     * Spracúvava ReportedOverlimitTransactionBadRequestException výnimku vrátením
+     * HTTP kódu BAD_REQUEST - 400 a chybovej hlášky v tele správy.  Zastaviteľná funkcia.
+     * @param ex caught exception.
+     *           odchytená výnimka.
+     * @return Mono emitting the list containing the error message of ex.
+     * Mono emitujúce zoznam ktorý obsahuje chybovú hlášku v ex.
      */
     @ExceptionHandler(ReportedOverlimitTransactionBadRequestException::class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)

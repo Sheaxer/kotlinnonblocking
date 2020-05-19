@@ -5,20 +5,33 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import org.springframework.validation.Errors
 import org.springframework.validation.Validator
-
+/***
+ * Class implementing the validation of Amount of money on ReportedOverlimitTransaction.
+ * Property amount must be greater than
+ * 0 and less than maxAmount or validator rejects with error code "FIELD_INVALID", and
+ * the amount must be less than limit or validator rejects with error code "LIMIT_EXCEEDED".
+ * Trieda implementuje Validator rozhranie a validáciu inštancií triedy Money.
+ * Premenná amount musí byť viac než 0 a menej než hodnota maxAmount - inak validátor zamietne inštanciu s chybovým
+ * kódom "FIELD_INVALID" a amount musí byť menej než hodnota limit - inak validátor
+ * zamietne inštanciu s chybovám kódom "LIMIT_EXCEEDED".
+ */
 @Component
 class MoneyValidator: Validator {
 
     /***
-     * Limit of amount in ReportedOverlimitTransaction, property
+     * Limit of amount in ReportedOverlimitTransaction, retrieved from property
      * - reportedOverlimitTransaction.limit, default 999999999.99
+     * Limit množstva peňazí v ReportedOverlimitTransaction, získané z atribút
+     *  reportedOverlimitTransaction.limit, predvolená hodnota 999999999.99.
      */
     @Value("\${reportedOverlimitTransaction.limit:999999999.99}")
     private val limit = 999999999.99
 
     /***
-     * Max amount used in ReportedOverlimitTransaction, property
+     * Max amount used in ReportedOverlimitTransaction, retrieved from  property
      * - reportedOverlimitTransaction.maxAmount, default 999999999.99
+     * Maximálna možná hodnota peňazí v objekte triedy ReportedOverlimitTransaction,
+     * získané z atribútú reportedOverlimitTransaction.maxAmount s predvolenou hodnotou 999999999.99.
      */
     @Value("\${reportedOverlimitTransaction.maxAmount:999999999.99}")
     private val maxAmount = 999999999.99

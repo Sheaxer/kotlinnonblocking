@@ -96,17 +96,14 @@ private val op: MongoOperations)
        var newId = this.getNextSequence(seqName)
         if(rep.existsById(newId).awaitFirstOrElse { false })
         {
-            newId   = if(rep is ReportedOverlimitTransactionRepository)
-                lastId(ReportedOverlimitTransaction::class.java)
-            else if (rep is ClientRepository)
-                lastId(Client::class.java)
-            else if (rep is EmployeeRepository)
-                lastId(Employee::class.java)
-            else if (rep is OrganisationUnitRepository)
-                lastId(OrganisationUnit::class.java)
-            else if (rep is AccountRepository)
-                lastId(Account::class.java)
-            else newId
+            newId   = when (rep) {
+                is ReportedOverlimitTransactionRepository -> lastId(ReportedOverlimitTransaction::class.java)
+                is ClientRepository -> lastId(Client::class.java)
+                is EmployeeRepository -> lastId(Employee::class.java)
+                is OrganisationUnitRepository -> lastId(OrganisationUnit::class.java)
+                is AccountRepository -> lastId(Account::class.java)
+                else -> newId
+            }
 
         }
         return newId

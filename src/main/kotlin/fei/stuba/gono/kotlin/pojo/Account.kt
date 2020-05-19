@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.core.index.Indexed
 import org.springframework.data.mongodb.core.mapping.Document
 /***
  * Class representing a banking account.
+ * Trieda reprezentujúca bankový účet.
  */
 @Document(collection = "accounts")
 @JsonInclude(JsonInclude.Include.NON_NULL)

@@ -1,21 +1,20 @@
 package fei.stuba.gono.kotlin.nonblocking.errors
 
 import java.lang.RuntimeException
-/***
- * <div class="en">Custom Exception class to be thrown during validation of
- * entity payload of PUT and POST REST methods.</div>
- * <div class="sk">Vlastná výnimka ktorá sa vyvoláva počas validácie entity ktorá je dátovým obsahom
- * požiadavky pre PUT A POST REST metód.</div>
- * @see stuba.fei.gono.java.nonblocking.services.ReportedOverlimitTransactionService
+/**
+ * Custom Exception class to be thrown during validation of
+ * entity payload of PUT and POST REST methods.
+ * Vlastná výnimka ktorá sa vyvoláva počas validácie entity ktorá je dátovým obsahom
+ * požiadavky pre PUT A POST REST metód.
  */
 class ReportedOverlimitTransactionValidationException() : RuntimeException() {
     var errors: MutableList<String>? = null
 
-    /***
-     * <div class="en">Constructor that creates the exception with list of error messages.</div>
-     * <div class="sk">Konštruktor ktorý vytvára výnimku pomocou listu chybných hlášok.</div>
-     * @param errors <div class="en">list of error messages.</div>
-     *               <div class="sk">list chybných hlášok.</div>
+    /**
+     * Constructor that creates the exception with list of error messages.
+     * Konštruktor ktorý vytvára výnimku pomocou listu chybných hlášok.
+     * @param errors list of error messages.
+     *               list chybných hlášok.
      */
     constructor(errors: MutableList<String>) : this() { this.errors = errors }
 

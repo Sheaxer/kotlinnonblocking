@@ -8,7 +8,14 @@ import org.springframework.stereotype.Component
 import org.springframework.validation.Errors
 import org.springframework.validation.ValidationUtils
 import org.springframework.validation.Validator
-
+/***
+ * Class implementing validaiton of ReportedOverlimitTransaction according to
+ * FENiX - New FrontEnd solution API definition (version 0.1)
+ * Trieda implementuje Validator rozhranie a validáciu inštancií tried
+ * ReportedOverlimitTransaction podľa definície  FENiX - New FrontEnd solution API definition (version 0.1)
+ *
+ * @see ReportedOverlimitTransaction
+ */
 @Component
 class ReportedOverlimitTransactionValidator @Autowired constructor(
         private val accountValidator: AccountValidator,

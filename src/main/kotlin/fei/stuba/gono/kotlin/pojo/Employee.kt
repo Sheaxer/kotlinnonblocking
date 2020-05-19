@@ -1,6 +1,5 @@
 package fei.stuba.gono.kotlin.pojo
 
-import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.index.Indexed
@@ -9,6 +8,7 @@ import javax.validation.constraints.NotBlank
 
 /***
  * Class representing data about bank employee and the system user.
+ * Trieda reprezentujúca dáta o zamestnanca banky, ktorý je zároveň používateľom systému.
  */
 @Document(collection = "employees")
 data class Employee (
