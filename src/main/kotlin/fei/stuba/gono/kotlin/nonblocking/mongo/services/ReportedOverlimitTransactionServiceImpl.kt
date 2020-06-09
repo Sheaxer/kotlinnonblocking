@@ -9,6 +9,10 @@ import fei.stuba.gono.kotlin.nonblocking.services.*
 import fei.stuba.gono.kotlin.nonblocking.validation.ReportedOverlimitTransactionValidator
 import fei.stuba.gono.kotlin.pojo.Account
 import fei.stuba.gono.kotlin.pojo.State
+import javafx.application.Application.launch
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.reactive.awaitFirst
 import kotlinx.coroutines.reactive.awaitFirstOrElse
 import kotlinx.coroutines.reactive.awaitFirstOrNull
@@ -112,52 +116,101 @@ class ReportedOverlimitTransactionServiceImpl @Autowired constructor(
      * @throws ReportedOverlimitTransactionValidationException if validation fails with all error codes.
      */
     @Throws(ReportedOverlimitTransactionValidationException::class)
-    override suspend fun validation(transaction: ReportedOverlimitTransaction)
-    {
-        val errors = BeanPropertyBindingResult(transaction,ReportedOverlimitTransaction::class.java.name)
-        validator.validate(transaction,errors)
-        val customErrors = mutableListOf<String>()
-        // maps all error codes to String and adds them to gathered error messages.
-        errors.allErrors.stream().map{oe -> oe.codes?.get(oe.codes!!.lastIndex) }
-                .forEach{x ->
-                    if (x != null) {
-                        customErrors.add(x)
-                    }
-                }
-        // checking if client exists in repository.
-        if(transaction.clientId!= null)
-        {
-            if(!clientService.clientExistsById(transaction.clientId!!))
-                customErrors.add("CLIENTID_INVALID")
-        }
-        // checking if organisationUnit exists in repository
-        if(transaction.organisationUnitID != null)
-        {
-            if(!organisationUnitService.organisationUnitExistsById(transaction.organisationUnitID!!))
-                customErrors.add("ORGANISATIONUNIT_INVALID")
-        }
-        // checking if employee exists in repository
-        if(transaction.createdBy!= null)
-        {
-            if(! employeeService.employeeExistsById(transaction.createdBy!!))
-                customErrors.add("CREATEDBY_INVALID")
-        }
-        // checking if account exists in the repository
-        if(transaction.sourceAccount!= null)
-        {
-            val acc: Account? = when {
-                transaction.sourceAccount!!.iban != null -> accountService.getAccountByIban(transaction.sourceAccount!!.iban!!)
-                transaction.sourceAccount!!.localAccountNumber!= null -> accountService.
-                getAccountByLocalAccountNumber(transaction.sourceAccount!!.localAccountNumber!!)
-                else -> Account()
+    override suspend fun validation(transaction: ReportedOverlimitTransaction) {
+        coroutineScope {
+            val errorsAsync = async {
+                println(Thread.currentThread().name)
+                val errors = BeanPropertyBindingResult(transaction, ReportedOverlimitTransaction::class.java.name)
+                validator.validate(transaction, errors)
+                return@async errors
             }
-            if(acc == null || !acc.isActive)
-                customErrors.add("ACCOUNT_OFFLINE")
 
+            val clientExist = async {
+                println(Thread.currentThread().name)
+                if(transaction.clientId != null)
+                    return@async clientService.clientExistsById((transaction.clientId!!))
+                else return@async true
+            }
+
+            val organisationExists = async {
+                println(Thread.currentThread().name)
+                if(transaction.organisationUnitID != null)
+                    return@async organisationUnitService.organisationUnitExistsById(transaction.organisationUnitID!!)
+                else return@async true
+            }
+
+            val employeeExist = async {
+                println(Thread.currentThread().name)
+                if(transaction.createdBy != null)
+                    return@async employeeService.employeeExistsById(transaction.createdBy!!)
+                else return@async true
+            }
+
+            val accountExist = async {
+                println(Thread.currentThread().name)
+                if (transaction.sourceAccount != null) {
+                    val acc: Account? = when {
+                        transaction.sourceAccount!!.iban != null ->
+                            accountService.getAccountByIban(transaction.sourceAccount!!.iban!!)
+                        transaction.sourceAccount!!.localAccountNumber != null ->
+                            accountService.getAccountByLocalAccountNumber(
+                                    transaction.sourceAccount!!.localAccountNumber!!)
+                        else -> null
+                    }
+                    return@async !(acc == null || !acc.isActive)
+                }
+                else
+                    return@async true
+            }
+
+
+            val customErrors = mutableListOf<String>()
+
+            // maps all error codes to String and adds them to gathered error messages.
+           errorsAsync.await().allErrors.stream().map { oe -> oe.codes?.get(oe.codes!!.lastIndex) }
+                    .forEach { x ->
+                        if (x != null) {
+                            customErrors.add(x)
+                        }
+                    }
+            if(!clientExist.await())
+                customErrors.add("CLIENTID_INVALID")
+            if(!organisationExists.await())
+                customErrors.add("ORGANISATIONUNIT_INVALID")
+            if(!employeeExist.await())
+                customErrors.add("CREATEDBY_INVALID")
+            if(!accountExist.await())
+                customErrors.add("ACCOUNT_OFFLINE")
+            // checking if client exists in repository.
+            /*if (transaction.clientId != null) {
+                if (!clientService.clientExistsById(transaction.clientId!!))
+                    customErrors.add("CLIENTID_INVALID")
+            }
+            // checking if organisationUnit exists in repository
+            if (transaction.organisationUnitID != null) {
+                if (!organisationUnitService.organisationUnitExistsById(transaction.organisationUnitID!!))
+                    customErrors.add("ORGANISATIONUNIT_INVALID")
+            }
+            // checking if employee exists in repository
+            if (transaction.createdBy != null) {
+                if (!employeeService.employeeExistsById(transaction.createdBy!!))
+                    customErrors.add("CREATEDBY_INVALID")
+            }
+            // checking if account exists in the repository
+            if (transaction.sourceAccount != null) {
+                val acc: Account? = when {
+                    transaction.sourceAccount!!.iban != null -> accountService.getAccountByIban(transaction.sourceAccount!!.iban!!)
+                    transaction.sourceAccount!!.localAccountNumber != null -> accountService.getAccountByLocalAccountNumber(transaction.sourceAccount!!.localAccountNumber!!)
+                    else -> Account()
+                }
+                if (acc == null || !acc.isActive)
+                    customErrors.add("ACCOUNT_OFFLINE")
+
+            }*/
+            // validaion failed - throw exception with all error codes
+            if (customErrors.isNotEmpty())
+                throw ReportedOverlimitTransactionValidationException(customErrors)
         }
-        // validaion failed - throw exception with all error codes
-        if(customErrors.isNotEmpty())
-            throw ReportedOverlimitTransactionValidationException(customErrors)
     }
 
 
